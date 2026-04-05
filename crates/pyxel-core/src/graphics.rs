@@ -211,6 +211,10 @@ impl Graphics {
         screen_texture
     }
 
+    pub fn invalidate_screen_texture(&mut self) {
+        self.screen_texture_initialized = false;
+    }
+
     unsafe fn create_colors_texture(gl: &mut glow::Context) -> glow::NativeTexture {
         let colors_texture = gl
             .create_texture()

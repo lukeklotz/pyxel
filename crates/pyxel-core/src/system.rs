@@ -257,6 +257,10 @@ impl Pyxel {
             return;
         }
 
+        if let Some(graphics) = &mut self.graphics {
+            graphics.invalidate_screen_texture();
+        }
+
         let (win_w, _) = platform::window_size();
         let old_w = *pyxel::width();
         let display_scale = if old_w > 0 { (win_w / old_w).max(1) } else { 1 };

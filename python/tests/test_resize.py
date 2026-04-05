@@ -1,5 +1,13 @@
 # python/tests/test_resize.py
 
+import pytest
+
+@pytest.fixture(autouse=True)
+def restore_dimensions(autouse=True):
+    yield
+    import pyxel
+
+    pyxel.resize(160, 120)
 
 def test_resize_updates_globals(init_pyxel):
     import pyxel
@@ -59,3 +67,26 @@ def test_resize_invalid(init_pyxel):
         assert False, "Expected ValueError for zero height"
     except ValueError:
         pass
+
+def test_resize_texture_invalidated(init_pyxel):
+    import pyxel
+
+    pyxel.resize(320, 240)
+    assert pyxel.width == 320
+    assert pyxel.height == 240
+
+    # draw at coords only valid at 320x240
+    pyxel.pset(300, 220, 7)
+
+    pyxel.resize(160, 120)
+    assert pyxel.width == 160
+    assert pyxel.height == 120
+
+    # draw at coords only valid at 160x120
+    pyxel.pset(150, 110, 7)
+
+    pyxel.resize(320, 240)
+    assert pyxel.width == 320
+    assert pyxel.height == 240
+
+    pyxel.pset(300, 220, 7)
